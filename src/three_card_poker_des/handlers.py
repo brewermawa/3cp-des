@@ -1,5 +1,7 @@
 from three_card_poker_des.state import State
-from three_card_poker_des.events import deal_cards
+from three_card_poker_des.events import(
+    deal_cards, player_turn,
+)
 
 
 
@@ -14,28 +16,31 @@ def handle_round_started(state, event, now):
 
 def handle_deal_cards(state, event, now):
     if state.round_state != State.RoundState.DEALING:
-        raise ValueError("DEAl_CARDS is only valid in DEALING state")
+        raise ValueError("DEAL_CARDS is only valid in DEALING state")
     
+    state.round.deck.burn()
+    
+    for card in state.round.deck.draw(3):
+        state.round.player_hand.add_card(card)
+
+    for card in state.round.deck.draw(3):
+        state.round.dealer_hand.add_card(card)
+
     state.round_state = State.RoundState.PLAYER_ACTING
+
+    return [player_turn(time=now+1)]
 
 
 def handle_player_turn(state, event, now):
-    pass
+    if state.round_state != State.RoundState.PLAYER_ACTING:
+        raise ValueError("PLAYER_TURN is only valid in PLAYER_ACTING state")
 
-
+ 
 def handle_player_bet(state, event, now):
     pass
 
 
-def handle_player_turn_completed(state, event, now):
-    pass
-
-
 def handle_dealer_turn(state, event, now):
-    pass
-
-
-def handle_dealer_turn_completed(state, event, now):
     pass
 
 
