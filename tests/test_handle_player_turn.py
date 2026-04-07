@@ -31,7 +31,7 @@ class TestHandlePlayerTurn:
         state = State(round=round, round_state=round_state)
         
         with pytest.raises(ValueError):
-            handle_player_turn(state, None, 0)
+            handle_player_turn(state, None, 0) 
 
 
     def test_leaves_round_in_round_state_player_acting(self, default_state):
