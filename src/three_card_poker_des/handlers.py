@@ -1,7 +1,9 @@
 from three_card_poker_des.state import State
 from three_card_poker_des.events import(
-    deal_cards, player_turn,
+    deal_cards, player_turn, player_bet, resolve_round
 )
+from three_card_poker.three_card_poker_rank import ThreeCardPokerRank
+from three_card_poker.three_card_poker_eval import ThreeCardPokerEval
 
 
 
@@ -34,6 +36,18 @@ def handle_deal_cards(state, event, now):
 def handle_player_turn(state, event, now):
     if state.round_state != State.RoundState.PLAYER_ACTING:
         raise ValueError("PLAYER_TURN is only valid in PLAYER_ACTING state")
+
+    eval_result = ThreeCardPokerEval.eval(state.round.player_hand)
+    state.player_hand_rank = eval_result["rank"]
+    if state.player_hand_rank == ThreeCardPokerRank.HIGH_CARD:
+        player_hand_cards = eval_result["sorted_hand"]
+        if player_hand_cards < [12, 6, 4]:
+            state.round_state = State.RoundState.RESOLVING
+            return [resolve_round(time=now+1)]
+        
+    state.player_bet = True
+    return [player_bet(time=now+1)]
+    
 
  
 def handle_player_bet(state, event, now):
