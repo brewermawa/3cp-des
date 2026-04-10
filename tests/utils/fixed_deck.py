@@ -53,6 +53,37 @@ class FixedDeck(Deck):
     def deck_for_player_straight_flush(self): #player bets
         self._program_ranks_top([Card("2", "♥"), Card("3", "♦"), Card("4", "♦"), Card("5", "♦")])
 
+    
+    #------------------------- Decks for dealer -----------------------------
+
+    def deck_for_dealer_246(self): #Doesn't qualify
+        self._program_ranks_top([
+            Card("2", "♥"), # burn card
+            Card("3", "♦"), Card("4", "♦"), Card("5", "♦"), # ṕlayer
+            Card("2", "♦"), Card("4", "♥"), Card("6", "♥"), # dealer
+        ])
+
+    def deck_for_dealer_JT8(self): #Doesn't qualify
+        self._program_ranks_top([
+            Card("2", "♥"), # burn card
+            Card("3", "♦"), Card("4", "♦"), Card("5", "♦"), # ṕlayer
+            Card("J", "♦"), Card("10", "♦"), Card("8", "♥"), # dealer
+        ])
+
+    def deck_for_dealer_Q23(self): # Qualifies with minimal hand
+        self._program_ranks_top([
+            Card("2", "♥"), # burn card
+            Card("3", "♦"), Card("4", "♦"), Card("5", "♦"), # ṕlayer
+            Card("Q", "♦"), Card("2", "♦"), Card("3", "♥"), # dealer
+        ])
+
+    def deck_for_dealer_226(self): # Qualifies with lowest pair
+        self._program_ranks_top([
+            Card("2", "♥"), # burn card
+            Card("3", "♦"), Card("4", "♦"), Card("5", "♦"), # ṕlayer
+            Card("2", "♦"), Card("2", "♠"), Card("6", "♥"), # dealer
+        ])
+
 
     
 if __name__ == "__main__":

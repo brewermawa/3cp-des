@@ -39,6 +39,7 @@ def handle_player_turn(state, event, now):
 
     eval_result = ThreeCardPokerEval.eval(state.round.player_hand)
     state.player_hand_rank = eval_result["rank"]
+    
     if state.player_hand_rank == ThreeCardPokerRank.HIGH_CARD:
         player_hand_cards = eval_result["sorted_hand"]
         if player_hand_cards < [12, 6, 4]:
@@ -54,6 +55,22 @@ def handle_player_turn(state, event, now):
 def handle_dealer_turn(state, event, now):
     if state.round_state != State.RoundState.DEALER_ACTING:
         raise ValueError("DEALER_TURN is only valid in DEALER_ACTING state")
+    
+    eval_result = ThreeCardPokerEval.eval(state.round.dealer_hand)
+    state.dealer_hand_rank = eval_result["rank"]
+
+
+    state.dealer_qualified = (
+        (state.dealer_hand_rank == ThreeCardPokerRank.HIGH_CARD and eval_result["sorted_hand"] >= [12, 3, 2])
+        or
+        (state.dealer_hand_rank in [
+            ThreeCardPokerRank.PAIR,
+            ThreeCardPokerRank.STRAIGHT,
+            ThreeCardPokerRank.FLUSH,
+            ThreeCardPokerRank.THREE_OF_A_KIND,
+            ThreeCardPokerRank.STRAIGHT_FLUSH
+        ])
+    )
     
     state.round_state = State.RoundState.RESOLVING
     

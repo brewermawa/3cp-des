@@ -37,31 +37,56 @@ class TestHandleDealerTurn:
 
 
     def test_leaves_round_in_round_state_resolving(self, default_state):
+        default_state.round_state = State.RoundState.DEALING
+        handle_deal_cards(default_state, None, 0)
+        default_state.round_state = State.RoundState.DEALER_ACTING
         handle_dealer_turn(default_state, None, 0)
 
         assert default_state.round_state == State.RoundState.RESOLVING
 
 
     def test_returns_list_with_correct_event_resolve_round(self, default_state):
+        default_state.round_state = State.RoundState.DEALING
+        handle_deal_cards(default_state, None, 0)
+        default_state.round_state = State.RoundState.DEALER_ACTING
         events = handle_dealer_turn(default_state, None, 0)
 
         assert events[0].type == "RESOLVE_ROUND"
 
-"""
+
     @pytest.mark.parametrize(
         "deck_to_use",
         [
-            "deck_for_player_Q63",
-            "deck_for_player_862",
+            "deck_for_dealer_Q23",
+            "deck_for_dealer_226",
         ]
     )
-    def test_returns_list_with_correct_event_if_player_folds(self, default_state, deck_to_use):
+    def test_returns_sets_state_dealer_qualfied_to_true_if_dealer_qualifies(self, default_state, deck_to_use):
         getattr(default_state.round.deck, deck_to_use)()
         default_state.round_state = State.RoundState.DEALING
         handle_deal_cards(default_state, None, 0)
-        events = handle_player_turn(default_state, None, 0)
+        default_state.round_state = State.RoundState.DEALER_ACTING
+        events = handle_dealer_turn(default_state, None, 0)
 
-        assert events[0].type == "RESOLVE_ROUND"
+        assert default_state.dealer_qualified is True
+
+
+    @pytest.mark.parametrize(
+        "deck_to_use",
+        [
+            "deck_for_dealer_246",
+            "deck_for_dealer_JT8",
+        ]
+    )
+    def test_returns_leaves_state_dealer_qualified_false_if_dealer_does_not_qualify(self, default_state, deck_to_use):
+        getattr(default_state.round.deck, deck_to_use)()
+        default_state.round_state = State.RoundState.DEALING
+        handle_deal_cards(default_state, None, 0)
+        default_state.round_state = State.RoundState.DEALER_ACTING
+        events = handle_dealer_turn(default_state, None, 0)
+
+        assert default_state.dealer_qualified is False
+
 
     @pytest.mark.parametrize(
         "deck_to_use",
@@ -70,33 +95,11 @@ class TestHandleDealerTurn:
             "deck_for_player_Q63",
         ]
     )
-    def test_handle_player_turn_sets_state_player_hand_rank(self, default_state, deck_to_use):
+    def test_handle_dealer_turn_sets_state_dealer_hand_rank(self, default_state, deck_to_use):
         getattr(default_state.round.deck, deck_to_use)()
         default_state.round_state = State.RoundState.DEALING
         handle_deal_cards(default_state, None, 0)
-        events = handle_player_turn(default_state, None, 0)
+        default_state.round_state = State.RoundState.DEALER_ACTING
+        events = handle_dealer_turn(default_state, None, 0)
 
-        assert isinstance(default_state.player_hand_rank, ThreeCardPokerRank)
-
-
-    @pytest.mark.parametrize(
-        "deck_to_use",
-        [
-            "deck_for_player_Q64",
-            "deck_for_player_K85",
-            "deck_for_player_pair",
-            "deck_for_player_straight",
-            "deck_for_player_flush",
-            "deck_for_player_trips",
-            "deck_for_player_straight_flush",
-        ]
-    )
-    def test_returns_set_player_bet_to_true_if_player_bets(self, default_state, deck_to_use):
-        getattr(default_state.round.deck, deck_to_use)()
-        default_state.round_state = State.RoundState.DEALING
-        handle_deal_cards(default_state, None, 0)
-        events = handle_player_turn(default_state, None, 0)
-
-        assert default_state.player_bet is True
-
-"""
+        assert isinstance(default_state.dealer_hand_rank, ThreeCardPokerRank)
