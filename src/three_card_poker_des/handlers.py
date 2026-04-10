@@ -46,12 +46,18 @@ def handle_player_turn(state, event, now):
             return [resolve_round(time=now+1)]
         
     state.player_bet = True
+    state.round_state = State.RoundState.DEALER_ACTING
     return [dealer_turn(time=now+1)]
     
 
  
 def handle_dealer_turn(state, event, now):
-    pass
+    if state.round_state != State.RoundState.DEALER_ACTING:
+        raise ValueError("DEALER_TURN is only valid in DEALER_ACTING state")
+    
+    state.round_state = State.RoundState.RESOLVING
+    
+    return [resolve_round(time=now+1)]
 
 
 def handle_resolve_round(state, event, now):
