@@ -89,7 +89,7 @@ class TestHandlePlayerTurn:
         handle_deal_cards(default_state, None, 0)
         events = handle_player_turn(default_state, None, 0)
 
-        assert events[0].type == "PLAYER_BET"
+        assert events[0].type == "DEALER_TURN"
 
 
     @pytest.mark.parametrize(

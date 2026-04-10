@@ -23,15 +23,6 @@ def player_turn(*, time: int) -> Event:
     )
 
 
-def player_bet(*, time: int) -> Event:
-    return Event(
-        time=time,
-        type="PLAYER_BET",
-        data={}
-    )
-
-
-
 def dealer_turn(*, time: int) -> Event:
     return Event(
         time=time,

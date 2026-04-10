@@ -1,6 +1,6 @@
 from three_card_poker_des.state import State
 from three_card_poker_des.events import(
-    deal_cards, player_turn, player_bet, resolve_round
+    deal_cards, player_turn, resolve_round, dealer_turn
 )
 from three_card_poker.three_card_poker_rank import ThreeCardPokerRank
 from three_card_poker.three_card_poker_eval import ThreeCardPokerEval
@@ -46,14 +46,10 @@ def handle_player_turn(state, event, now):
             return [resolve_round(time=now+1)]
         
     state.player_bet = True
-    return [player_bet(time=now+1)]
+    return [dealer_turn(time=now+1)]
     
 
  
-def handle_player_bet(state, event, now):
-    pass
-
-
 def handle_dealer_turn(state, event, now):
     pass
 
