@@ -85,6 +85,50 @@ class FixedDeck(Deck):
         ])
 
 
+    #---------------------------Decks for player folds---------------------------
+
+    def deck_for_player_folds_with_dealer_non_qualifying_hand(self):
+        self._program_ranks_top([
+            Card("2", "♥"), # burn card
+            Card("J", "♦"), Card("10", "♦"), Card("5", "♥"), # ṕlayer
+            Card("2", "♦"), Card("8", "♠"), Card("6", "♥"), # dealer
+        ])
+
+    def deck_for_player_folds_with_dealer_qualifying_hand(self):
+        self._program_ranks_top([
+            Card("2", "♥"), # burn card
+            Card("J", "♦"), Card("10", "♦"), Card("5", "♥"), # ṕlayer
+            Card("K", "♦"), Card("8", "♠"), Card("6", "♥"), # dealer
+        ])
+
+    def deck_for_player_bets_with_dealer_non_qualifying_hand(self):
+        self._program_ranks_top([
+            Card("2", "♥"), # burn card
+            Card("Q", "♦"), Card("6", "♦"), Card("4", "♥"), # ṕlayer
+            Card("2", "♦"), Card("8", "♠"), Card("6", "♥"), # dealer
+        ])
+
+    def deck_for_player_wins(self):
+        self._program_ranks_top([
+            Card("2", "♥"), # burn card
+            Card("Q", "♦"), Card("6", "♦"), Card("4", "♥"), # ṕlayer
+            Card("Q", "♥"), Card("5", "♠"), Card("3", "♥"), # dealer
+        ])
+
+    def deck_for_dealer_wins(self):
+        self._program_ranks_top([
+            Card("2", "♥"), # burn card
+            Card("K", "♦"), Card("K", "♠"), Card("4", "♥"), # ṕlayer
+            Card("A", "♥"), Card("2", "♠"), Card("3", "♥"), # dealer
+        ])
+
+    def deck_for_push(self):
+        self._program_ranks_top([
+            Card("2", "♥"), # burn card
+            Card("K", "♦"), Card("K", "♠"), Card("4", "♥"), # ṕlayer
+            Card("K", "♥"), Card("K", "♣"), Card("4", "♦"), # dealer
+        ])
+
     
 if __name__ == "__main__":
     deck = FixedDeck()
