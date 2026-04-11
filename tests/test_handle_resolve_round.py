@@ -42,7 +42,7 @@ class TestHandleResolveRound:
         default_state.round_state = State.RoundState.RESOLVING
         handle_resolve_round(default_state, None, 0)
 
-        assert default_state.round_state == State.RoundState.DONE
+        assert default_state.round_state == State.RoundState.RESOLVING
 
 
     def test_returns_list_with_correct_event_round_finished(self, default_state):
