@@ -47,8 +47,18 @@ while not simulation_stop_condition(config, hands_played, stats.money):
     match state.outcomes:
         case State.RoundOutcome.PLAYER_WINS:
             stats.win += 1
+            if state.dealer_qualified:
+                stats.money += (config.bet_size * 2)
+            else:
+                stats.money += config.bet_size
+
         case State.RoundOutcome.DEALER_WINS:
             stats.lost += 1
+            if state.player_bet:
+                stats.money -= (config.bet_size * 2)
+            else:
+                stats.money -= config.bet_size
+
         case State.RoundOutcome.PUSH:
             stats.push += 1
 
@@ -66,6 +76,16 @@ while not simulation_stop_condition(config, hands_played, stats.money):
             stats.three_of_a_kind += 1
         case ThreeCardPokerRank.STRAIGHT_FLUSH:
             stats.straight_flush += 1
+
+    if state.pair_plus_multiplier == 0:
+        stats.pair_plus -= config.pair_plus_bet
+        stats.money -= config.pair_plus_bet
+    else:
+        stats.pair_plus += (config.pair_plus_bet + config.pair_plus_bet * state.pair_plus_multiplier)
+        stats.money += (config.pair_plus_bet + config.pair_plus_bet * state.pair_plus_multiplier)
+
+    if state.ante_bonus > 0:
+        stats.money += (state.ante_bonus * config.bet_size)
 
     hands_played += 1
 
